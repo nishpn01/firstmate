@@ -1,0 +1,56 @@
+########## BEFORE (base c731c36 - the reported bug) ##########
+
+$ cat state/orcacompositedemo.meta
+window=fm-orcacompositedemo
+endpoint_task_id=orcacompositedemo
+terminal=term-composite-demo
+worktree=<tmp>/worktree
+project=<tmp>/project
+harness=claude
+kind=ship
+mode=local-only
+yolo=off
+backend=orca
+orca_worktree_id=c3bcc5b7-c52e-415c-97d4-99b0e08024df::<tmp>/worktree
+
+$ fm-teardown.sh orcacompositedemo
+REFUSED: Orca endpoint metadata for task orcacompositedemo is malformed or inconsistent; preserving task state.
+exit status: 1
+
+-- what firstmate actually asked the Orca CLI to do --
+(the Orca CLI was never invoked)
+
+-- operator-visible end state --
+state/orcacompositedemo.meta: STILL PRESENT (task not torn down)
+worktree <tmp>/worktree: STILL ON DISK
+
+########## AFTER (fix/orca-composite-worktree-id @ 5f817d6) ##########
+
+$ cat state/orcacompositedemo.meta
+window=fm-orcacompositedemo
+endpoint_task_id=orcacompositedemo
+terminal=term-composite-demo
+worktree=<tmp>/worktree
+project=<tmp>/project
+harness=claude
+kind=ship
+mode=local-only
+yolo=off
+backend=orca
+orca_worktree_id=c3bcc5b7-c52e-415c-97d4-99b0e08024df::<tmp>/worktree
+
+$ fm-teardown.sh orcacompositedemo
+teardown: reaping leaked worktree process(es) for orcacompositedemo: 22813
+teardown orcacompositedemo complete (window term-composite-demo, worktree <tmp>/worktree)
+Backlog: orcacompositedemo just finished. Run tasks-axi done orcacompositedemo --note "local main", then run tasks-axi ready for dependency-cleared candidates, check date gates, and dispatch only work whose blockers are gone and date is due.
+exit status: 0
+
+-- what firstmate actually asked the Orca CLI to do --
+orca worktree show --worktree id:c3bcc5b7-c52e-415c-97d4-99b0e08024df::<tmp>/worktree --json
+orca terminal close --terminal term-composite-demo --json
+orca worktree rm --worktree id:c3bcc5b7-c52e-415c-97d4-99b0e08024df::<tmp>/worktree --force --json
+
+-- operator-visible end state --
+state/orcacompositedemo.meta: removed (task torn down)
+worktree <tmp>/worktree: removed
+

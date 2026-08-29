@@ -1,0 +1,38 @@
+########## malformed Orca worktree ids still fail closed (@ 5f817d6) ##########
+
+--- empty pty-id half
+    orca_worktree_id=::<tmp>/a-worktree
+    $ fm-teardown.sh orcamalformeddemo
+    REFUSED: Orca endpoint metadata for task orcamalformeddemo is malformed or inconsistent; preserving task state.
+    exit status: 1
+    orca CLI invoked: never (refused before any runtime call)
+    state/orcamalformeddemo.meta: preserved
+    worktree: intact
+
+--- relative path half
+    orca_worktree_id=c3bcc5b7-c52e-415c-97d4-99b0e08024df::relative/worktree
+    $ fm-teardown.sh orcamalformeddemo
+    REFUSED: Orca endpoint metadata for task orcamalformeddemo is malformed or inconsistent; preserving task state.
+    exit status: 1
+    orca CLI invoked: never (refused before any runtime call)
+    state/orcamalformeddemo.meta: preserved
+    worktree: intact
+
+--- path traversal
+    orca_worktree_id=c3bcc5b7-c52e-415c-97d4-99b0e08024df::<tmp>/c-worktree/../elsewhere
+    $ fm-teardown.sh orcamalformeddemo
+    REFUSED: Orca endpoint metadata for task orcamalformeddemo is malformed or inconsistent; preserving task state.
+    exit status: 1
+    orca CLI invoked: never (refused before any runtime call)
+    state/orcamalformeddemo.meta: preserved
+    worktree: intact
+
+--- embedded control character
+    orca_worktree_id=c3bcc5b7-c52e-415c-97d4-99b0e08024df::<tmp>/d-worktree	trailing
+    $ fm-teardown.sh orcamalformeddemo
+    REFUSED: Orca endpoint metadata for task orcamalformeddemo is malformed or inconsistent; preserving task state.
+    exit status: 1
+    orca CLI invoked: never (refused before any runtime call)
+    state/orcamalformeddemo.meta: preserved
+    worktree: intact
+
