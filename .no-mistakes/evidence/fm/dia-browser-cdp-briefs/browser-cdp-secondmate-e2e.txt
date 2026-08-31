@@ -1,0 +1,10 @@
+End-to-end evidence: captain config -> secondmate spawn -> generated scout brief
+Inherited endpoint:
+http://localhost:9223
+
+Rendered brief rule:
+# Rules
+1. Never push to any remote and never open a PR.
+2. Stay inside this worktree; the only files you may write outside it are the report and the status file below.
+3. Use gh-axi for GitHub operations. Before browser automation, check `http://localhost:9223/json/version` with `/usr/bin/curl`. When it responds, connect with `CHROME_DEVTOOLS_AXI_SESSION=firstmate-browser CHROME_DEVTOOLS_AXI_BROWSER_URL=http://localhost:9223 chrome-devtools-axi ...`. Do not launch or install a browser, create a fake browser-app alias, or expose the debugger beyond loopback. If the endpoint is unavailable, append `blocked: configured browser CDP endpoint unavailable` and stop.
+4. Report status by appending one line:
